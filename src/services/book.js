@@ -72,3 +72,17 @@ export const getUserBookById = (userId, bookId) => {
   const book = userBooks.find((book) => book.id == bookId)
   return book || null
 }
+
+// Delete a book from user-specific local storage by its id
+export const deleteUserBook = (userId, bookId) => {
+  const userBooks = getUserBooksFromLocalStorage(userId)
+  const indexToDelete = userBooks.findIndex((book) => book.id === bookId)
+
+  if (indexToDelete !== -1) {
+    userBooks.splice(indexToDelete, 1)
+    setUserBooksInLocalStorage(userId, userBooks)
+    console.log('Book deleted successfully.')
+  } else {
+    console.log('Book not found for deleting.')
+  }
+}
