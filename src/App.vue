@@ -1,12 +1,5 @@
 <script setup>
 import { RouterView } from 'vue-router'
-import { useStore } from 'vuex'
-import { onMounted } from 'vue'
-
-const store = useStore()
-onMounted(() => {
-  store.commit('setUserId', 1)
-})
 </script>
 
 <template>

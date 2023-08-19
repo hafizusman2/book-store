@@ -18,7 +18,7 @@ app.use(router)
 app.use(store)
 app.use(Quasar, {
   config: {
-    dark: true
+    // dark: true
   },
   plugins: {}
 })

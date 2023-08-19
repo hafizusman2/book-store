@@ -26,9 +26,12 @@
         <option value="completed">Completed</option>
       </select>
     </div>
-    <button type="submit" class="btn btn-primary">
-      {{ bookId && book.id ? 'Update' : 'Add' }} Book
-    </button>
+    <div class="d-flex justify-content-between">
+      <router-link class="btn btn-primary" :to="{ name: 'books' }">Back</router-link>
+      <button type="submit" class="btn btn-primary">
+        {{ bookId && book.id ? 'Update' : 'Add' }} Book
+      </button>
+    </div>
   </form>
 </template>
 

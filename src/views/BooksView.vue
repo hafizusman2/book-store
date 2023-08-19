@@ -1,7 +1,12 @@
 <template>
   <div class="container mt-5">
-    <div class="mb-3">
-      <router-link :to="{ name: 'add-book' }" class="btn btn-primary">Add Book</router-link>
+    <div class="d-flex justify-content-between">
+      <div class="mb-3">
+        <router-link :to="{ name: 'add-book' }" class="btn btn-primary">Add Book</router-link>
+      </div>
+      <div class="mb-3">
+        <button @click="logout" class="btn btn-secondary text-white">Logout</button>
+      </div>
     </div>
     <q-dialog v-model="showModal" persistent>
       <q-card style="width: 600px">
@@ -74,7 +79,7 @@ import { useRouter } from 'vue-router'
 import { useStore } from 'vuex'
 
 import { getUserBooks, deleteUserBook } from '../services/book.js'
-
+import { removeUserInfo } from '../services/user.js'
 onMounted(() => {
   getBooks()
 })
@@ -129,6 +134,12 @@ const initialPagination = ref({
 const deleteBook = (bookId) => {
   deleteUserBook(userId.value, bookId)
   getBooks()
+}
+
+const logout = () => {
+  store.commit('setUserData', { id: null, phoneNumber: null })
+  removeUserInfo()
+  router.push({ name: 'auth' })
 }
 
 const updateBook = (bookId) => {

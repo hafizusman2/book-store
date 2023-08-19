@@ -3,14 +3,16 @@ import { reactive } from 'vue'
 // State
 const state = reactive({
   userData: {
-    id: null
+    id: null,
+    phone: null
   }
 })
 
 // Getters
 const getters = {
   getUserData: (state) => state.userData,
-  getUserId: (state) => (state.userData ? state.userData.id : null)
+  getUserId: (state) => (state.userData ? state.userData.id : null),
+  getPhoneNumber: (state) => (state.userData ? state.userData.phone : null)
 }
 
 // Mutations
