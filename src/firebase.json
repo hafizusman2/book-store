@@ -1,0 +1,6 @@
+{
+  "hosting": {
+    "site": "book-store-app",
+    "public": "public"
+  }
+}
