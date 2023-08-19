@@ -19,13 +19,14 @@ export const updateUserBook = (userId, bookId, updatedBookData) => {
     )
     if (existingBookWithSameTitle) {
       console.log('A book with the same title already exists. Update not allowed.')
-      return
+      return null
     }
 
     // Update the book data at the found index
     userBooks[indexToUpdate] = { ...userBooks[indexToUpdate], ...updatedBookData }
     setUserBooksInLocalStorage(userId, userBooks)
     console.log('Book updated successfully.')
+    return 'userBooks[indexToUpdate].id'
   } else {
     console.log('Book not found for updating.')
   }
@@ -40,12 +41,13 @@ export const addUserBook = (userId, bookData) => {
   const existingBookWithSameTitle = userBooks.some((book) => book.title === bookData.title)
   if (existingBookWithSameTitle) {
     console.log('A book with the same title already exists.')
-    return
+    return null
   }
 
   bookData.id = generateAutoIncrementId(userBooks)
   userBooks.push(bookData)
   setUserBooksInLocalStorage(userId, userBooks)
+  return bookData.id
 }
 
 // Helper function to get user-specific books from local storage

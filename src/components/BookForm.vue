@@ -1,5 +1,5 @@
 <template>
-  <form @submit.prevent="submitForm">
+  <form @submit.prevent="submitForm" class="book-form">
     <div class="form-group">
       <label for="title">Title</label>
       <input v-model="book.title" type="text" class="form-control" id="title" required />
@@ -10,6 +10,7 @@
         v-model="book.description"
         class="form-control"
         id="description"
+        rows="4"
         required
       ></textarea>
     </div>
@@ -33,7 +34,10 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
 import { addUserBook, updateUserBook, getUserBookById } from '../services/book.js'
+
+const router = useRouter()
 
 const props = defineProps({
   bookId: {
@@ -58,14 +62,29 @@ const book = ref({
 })
 
 const submitForm = () => {
-  if (props.bookId && book.value.id) updateUserBook(1, props.bookId, book.value)
-  addUserBook(1, book.value)
+  let response = null
+  if (props.bookId && book.value.id) response = updateUserBook(1, props.bookId, book.value)
+  else {
+    response = addUserBook(1, book.value)
+  }
+  if (response)
+    setTimeout(() => {
+      router.push('/books')
+    }, 500)
 }
 </script>
 
 <style scoped>
+.book-form {
+  max-width: 400px;
+  margin: 0 auto;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+
 .form-group {
-  margin-bottom: 1rem;
+  margin-bottom: 1.5rem;
 }
 
 label {
@@ -73,6 +92,19 @@ label {
 }
 
 textarea {
-  resize: vertical;
+  resize: none;
+}
+
+.btn-primary {
+  background-color: #007bff;
+  border: none;
+}
+
+.btn-primary:hover {
+  background-color: #0056b3;
+}
+
+.btn-primary:focus {
+  box-shadow: none;
 }
 </style>
