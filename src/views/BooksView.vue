@@ -25,7 +25,27 @@
   </div>
 
   <div class="q-pa-md">
-    <q-table title="Books" :rows="rows" :columns="columns" row-key="id">
+    <q-input
+      outlined
+      dense
+      v-model="search"
+      debounce="300"
+      label="Search"
+      hint="Search by title, description or status"
+      class="q-mb-md"
+    />
+
+    <q-select
+      v-model="filterStatus"
+      label="Filter by Status"
+      outlined
+      dense
+      :options="statusOptions"
+      class="q-mb-md"
+    />
+    <q-btn label="Clear Filters" color="primary" @click="clearFilters" />
+
+    <q-table title="Books" :rows="filteredRows" :columns="columns" row-key="id">
       <template v-slot:body="props">
         <q-tr :props="props">
           <q-td key="id" :props="props">
@@ -56,7 +76,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import { useRouter } from 'vue-router'
 
 import { getUserBooks, deleteUserBook } from '../services/book.js'
@@ -70,11 +90,32 @@ const formatDate = (dateString) => {
   return new Date(dateString).toLocaleDateString(undefined, options)
 }
 
+const search = ref('')
+const filterStatus = ref('')
+const statusOptions = ['pending', 'in-progress', 'completed']
+
 const rows = ref([])
 const showModal = ref(false)
 const selectedBook = ref({})
 
 const router = useRouter()
+
+const filteredRows = computed(() => {
+  const filtered = rows.value.filter((row) => {
+    return (
+      (row.title.toLowerCase().includes(search.value.toLowerCase()) ||
+        row.description.toLowerCase().includes(search.value.toLowerCase())) &&
+      (filterStatus.value === '' || row.status === filterStatus.value)
+    )
+  })
+  return filtered
+})
+
+const clearFilters = () => {
+  search.value = ''
+  filterStatus.value = ''
+}
+
 const getBooks = () => {
   const bookData = getUserBooks(1)
   if (bookData) {
