@@ -1,7 +1,13 @@
 // Get user-specific books from local storage
-export const getUserBooks = (userId) => {
-  const userBooks = getUserBooksFromLocalStorage(userId)
-  return userBooks
+export const getUserBooks = (userId, page = 1, limit = 999) => {
+  const userBooks = getUserBooksFromLocalStorage(userId, page, limit)
+
+  // Calculate the start and end indexes for pagination
+  const startIndex = (page - 1) * limit
+  const endIndex = startIndex + limit
+
+  // Return the paginated user books
+  return { books: userBooks.slice(startIndex, endIndex), count: userBooks.length }
 }
 
 // Update a book in user-specific local storage by its id

@@ -71,6 +71,7 @@
 <script setup>
 import { ref, onMounted, computed } from 'vue'
 import { useRouter } from 'vue-router'
+import { useStore } from 'vuex'
 
 import { getUserBooks, deleteUserBook } from '../services/book.js'
 
@@ -92,6 +93,9 @@ const showModal = ref(false)
 const selectedBook = ref({})
 
 const router = useRouter()
+const store = useStore()
+
+const userId = computed(() => store.getters.getUserId)
 
 const filteredRows = computed(() => {
   const filtered = rows.value.filter((row) => {
@@ -110,14 +114,20 @@ const clearFilters = () => {
 }
 
 const getBooks = () => {
-  const bookData = getUserBooks(1)
+  const bookData = getUserBooks(userId.value)
   if (bookData) {
-    rows.value = bookData
+    rows.value = bookData.books
+    initialPagination.value.rowsNumber = bookData.count
   }
 }
+const initialPagination = ref({
+  page: 1,
+  rowsPerPage: 3,
+  rowsNumber: 10
+})
 
 const deleteBook = (bookId) => {
-  deleteUserBook(1, bookId)
+  deleteUserBook(userId.value, bookId)
   getBooks()
 }
 

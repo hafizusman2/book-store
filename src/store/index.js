@@ -1,7 +1,11 @@
 import { createStore } from 'vuex'
+import user from './user'
 
-// Create a new store instance.
+// Create a new store instance
 const store = createStore({
+  modules: {
+    user
+  },
   state() {
     return {
       count: 0

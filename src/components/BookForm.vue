@@ -33,11 +33,15 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import { useRouter } from 'vue-router'
+import { useStore } from 'vuex'
 import { addUserBook, updateUserBook, getUserBookById } from '../services/book.js'
 
 const router = useRouter()
+const store = useStore()
+
+const userId = computed(() => store.getters.getUserId)
 
 const props = defineProps({
   bookId: {
@@ -48,7 +52,7 @@ const props = defineProps({
 
 onMounted(() => {
   if (props.bookId) {
-    const bookData = getUserBookById(1, props.bookId)
+    const bookData = getUserBookById(userId.value, props.bookId)
     if (!bookData) return
     book.value = bookData
   }
@@ -63,9 +67,10 @@ const book = ref({
 
 const submitForm = () => {
   let response = null
-  if (props.bookId && book.value.id) response = updateUserBook(1, props.bookId, book.value)
+  if (props.bookId && book.value.id)
+    response = updateUserBook(userId.value, props.bookId, book.value)
   else {
-    response = addUserBook(1, book.value)
+    response = addUserBook(userId.value, book.value)
   }
   if (response)
     setTimeout(() => {
