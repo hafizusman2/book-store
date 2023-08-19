@@ -1,13 +1,13 @@
 <template>
-  <div>
-    <router-link :to="{ name: 'add-book' }" class="btn btn-primary"> Add Book </router-link>
-  </div>
-  <div>
+  <div class="container mt-5">
+    <div class="mb-3">
+      <router-link :to="{ name: 'add-book' }" class="btn btn-primary">Add Book</router-link>
+    </div>
     <q-dialog v-model="showModal" persistent>
       <q-card style="width: 600px">
         <q-card-section>
           <q-card-section>
-            <strong> {{ selectedBook.title }}</strong>
+            <strong>{{ selectedBook.title }}</strong>
           </q-card-section>
           <q-card-section>
             <p><strong>Book Id:</strong> {{ selectedBook.id }}</p>
@@ -22,56 +22,49 @@
         </q-card-section>
       </q-card>
     </q-dialog>
-  </div>
 
-  <div class="q-pa-md">
-    <q-input
-      outlined
-      dense
-      v-model="search"
-      debounce="300"
-      label="Search"
-      hint="Search by title, description or status"
-      class="q-mb-md"
-    />
+    <div class="q-pa-md">
+      <div>
+        <q-input
+          outlined
+          dense
+          v-model="search"
+          debounce="300"
+          label="Search"
+          hint="Search by title, description or status"
+          class="mb-3 col-12 col-lg-6"
+        />
+        <q-select
+          v-model="filterStatus"
+          label="Filter by Status"
+          outlined
+          dense
+          :options="statusOptions"
+          class="mb-3 col-12 col-lg-6"
+        />
+      </div>
+      <q-btn label="Clear Filters" color="primary" @click="clearFilters" class="mb-3" />
 
-    <q-select
-      v-model="filterStatus"
-      label="Filter by Status"
-      outlined
-      dense
-      :options="statusOptions"
-      class="q-mb-md"
-    />
-    <q-btn label="Clear Filters" color="primary" @click="clearFilters" />
-
-    <q-table title="Books" :rows="filteredRows" :columns="columns" row-key="id">
-      <template v-slot:body="props">
-        <q-tr :props="props">
-          <q-td key="id" :props="props">
-            {{ props.row.id }}
-          </q-td>
-          <q-td key="title" :props="props">
-            {{ props.row.title }}
-          </q-td>
-          <q-td key="due_date" :props="props">
-            {{ formatDate(props.row.due_date) }}
-          </q-td>
-          <q-td key="status" :props="props">
-            {{ props.row.status }}
-          </q-td>
-          <q-td key="view" :props="props">
-            <q-btn color="primary" @click="viewBook(props.row)" name="view" icon="visibility" />
-          </q-td>
-          <q-td key="update" :props="props">
-            <q-btn color="primary" @click="updateBook(props.row.id)" name="update" icon="edit" />
-          </q-td>
-          <q-td key="delete" :props="props">
-            <q-btn color="negative" @click="deleteBook(props.row.id)" name="delete" icon="delete" />
-          </q-td>
-        </q-tr>
-      </template>
-    </q-table>
+      <q-table title="Books" :rows="filteredRows" :columns="columns" row-key="id">
+        <template v-slot:body="props">
+          <q-tr :props="props">
+            <q-td key="id" :props="props">{{ props.row.id }}</q-td>
+            <q-td key="title" :props="props">{{ props.row.title }}</q-td>
+            <q-td key="due_date" :props="props">{{ formatDate(props.row.due_date) }}</q-td>
+            <q-td key="status" :props="props">{{ props.row.status }}</q-td>
+            <q-td key="view" :props="props">
+              <q-btn color="primary" @click="viewBook(props.row)" name="view" icon="visibility" />
+            </q-td>
+            <q-td key="update" :props="props">
+              <q-btn color="primary" @click="updateBook(props.row.id)" name="update" icon="edit" />
+            </q-td>
+            <q-td key="delete" :props="props">
+              <q-btn color="danger" @click="deleteBook(props.row.id)" name="delete" icon="delete" />
+            </q-td>
+          </q-tr>
+        </template>
+      </q-table>
+    </div>
   </div>
 </template>
 
@@ -172,3 +165,9 @@ const columns = [
   }
 ]
 </script>
+
+<style scoped>
+.custom-select .q-field__label {
+  width: 150px;
+}
+</style>
