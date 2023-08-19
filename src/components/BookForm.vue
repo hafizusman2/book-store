@@ -25,14 +25,29 @@
         <option value="completed">Completed</option>
       </select>
     </div>
-    <button type="submit" class="btn btn-primary">{{ isEditMode ? 'Update' : 'Add' }} Book</button>
+    <button type="submit" class="btn btn-primary">
+      {{ bookId && book.id ? 'Update' : 'Add' }} Book
+    </button>
   </form>
 </template>
 
 <script setup>
-import { ref } from 'vue'
-defineProps({
-  isEditMode: Boolean
+import { ref, onMounted } from 'vue'
+import { addUserBook, updateUserBook, getUserBookById } from '../services/book.js'
+
+const props = defineProps({
+  bookId: {
+    type: Number,
+    default: null
+  }
+})
+
+onMounted(() => {
+  if (props.bookId) {
+    const bookData = getUserBookById(1, props.bookId)
+    if (!bookData) return
+    book.value = bookData
+  }
 })
 const book = ref({
   id: null,
@@ -43,12 +58,21 @@ const book = ref({
 })
 
 const submitForm = () => {
-  console.log(book.value, 'book data')
+  if (props.bookId && book.value.id) updateUserBook(1, props.bookId, book.value)
+  addUserBook(1, book.value)
 }
 </script>
 
 <style scoped>
 .form-group {
   margin-bottom: 1rem;
+}
+
+label {
+  font-weight: bold;
+}
+
+textarea {
+  resize: vertical;
 }
 </style>
